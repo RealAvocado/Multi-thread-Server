@@ -5,11 +5,9 @@ import java.util.List;
 import java.util.Scanner;
 
 public class Client implements Serializable {
-    public List<Integer> numberList = new ArrayList<>();
+    public static List<Integer> numberList = new ArrayList<>();
 
     public static void main(String[] args) throws IOException {
-        Client client = new Client();
-
         if (args.length != 2) {
             System.err.println("Usage: java HelloClient <host name> <port number>");
             System.exit(1);
@@ -19,15 +17,13 @@ public class Client implements Serializable {
         int portNumber = Integer.parseInt(args[1]);
 
         try (Socket myClientSocket = new Socket(hostName, portNumber);
-             //PrintWriter output = new PrintWriter(myClientSocket.getOutputStream(), true);
-             //BufferedReader input = new BufferedReader(new InputStreamReader(myClientSocket.getInputStream()));
              ObjectOutputStream oos = new ObjectOutputStream(myClientSocket.getOutputStream()); //used to transmit arraylist
              ObjectInputStream ois = new ObjectInputStream(myClientSocket.getInputStream())
              )
         {
             //System.out.println(input.readLine()); //--- reads the first message from the server and prints it (hello)
-            PackageSender packageSender1 = (PackageSender) ois.readObject();
-            System.out.println(packageSender1.message);
+            MessageSender messageSender1 = (MessageSender) ois.readObject();
+            System.out.println(messageSender1.message);
             System.out.println();
 
             System.out.println("Now you can send the integer numbers you want to operate to the server.\nHow many numbers in total? Please enter the amount.");
@@ -65,19 +61,18 @@ public class Client implements Serializable {
                         System.out.println("Invalid input. Please enter a correct number.");
                     }
                 }
-                client.numberList.add(num_input);
+                Client.numberList.add(num_input);
             }
-            oos.writeObject(client);//---output
-            oos.flush();
-            //oos.close();
-            //System.out.println(input.readLine()); //--- reads server's ack and prints it (sending back to you now)
-            Server server = (Server) ois.readObject();//---receive
-            int[] resultArray = server.resultArray;
+            MessageSender messageSender2 = new MessageSender("Client: Numbers have reached, waiting to be calculated:", null, Client.numberList);
+            oos.writeObject(messageSender2);//---output
+
+            MessageSender messageSender3 = (MessageSender) ois.readObject();
+            System.out.println(messageSender3.message);
             System.out.println("The result is:");
-            for (int num:resultArray) {
+            for (int num:messageSender3.arr) {
                 System.out.print(num + " ");
             }
-            System.out.println("-----------End of communication-----------");
+            System.out.println("\n-----------End of communication-----------");
             System.out.println("\nCommunication with server " + hostName + " was successful! Now closing...");
         } catch (UnknownHostException e) {
             System.err.println("Don't know about host " + hostName);
@@ -89,6 +84,5 @@ public class Client implements Serializable {
         } catch (ClassNotFoundException e) {
             e.printStackTrace();
         }
-
     }
 }
