@@ -19,26 +19,30 @@ public class Client implements Serializable {
         int portNumber = Integer.parseInt(args[1]);
 
         try (Socket myClientSocket = new Socket(hostName, portNumber);
-             PrintWriter output = new PrintWriter(myClientSocket.getOutputStream(), true);
-             BufferedReader input = new BufferedReader(new InputStreamReader(myClientSocket.getInputStream()));
+             //PrintWriter output = new PrintWriter(myClientSocket.getOutputStream(), true);
+             //BufferedReader input = new BufferedReader(new InputStreamReader(myClientSocket.getInputStream()));
              ObjectOutputStream oos = new ObjectOutputStream(myClientSocket.getOutputStream()); //used to transmit arraylist
-             ObjectInputStream ois = new ObjectInputStream(myClientSocket.getInputStream());
+             ObjectInputStream ois = new ObjectInputStream(myClientSocket.getInputStream())
              )
         {
-            Scanner scanner = new Scanner(System.in);
-            int userInput;
-            System.out.println(input.readLine()); // reads the first message from the server and prints it
+            //System.out.println(input.readLine()); //--- reads the first message from the server and prints it (hello)
+            PackageSender packageSender1 = (PackageSender) ois.readObject();
+            System.out.println(packageSender1.message);
+            System.out.println();
+
             System.out.println("Now you can send the integer numbers you want to operate to the server.\nHow many numbers in total? Please enter the amount.");
+            Scanner scanner = new Scanner(System.in);
+            int num_amount;
+            int num_input;
             while(true) {
                 if (scanner.hasNextInt()) {
-                    userInput = scanner.nextInt(); // reads user's input
-                    //output.println(userInput); //---output
+                    num_amount = scanner.nextInt(); // reads user's input
                     break;
                 } else {
                     System.out.println("Invalid input. Please enter a correct number.");
                 }
             }
-            for (int i = 0; i < userInput; i++) {
+            for (int i = 0; i < num_amount; i++) {
                 switch (i){
                     case 0:
                         System.out.println("Enter the first number:");
@@ -55,16 +59,24 @@ public class Client implements Serializable {
                 }
                 while(true) {
                     if (scanner.hasNextInt()) {
-                        userInput = scanner.nextInt(); // reads user's input
+                        num_input = scanner.nextInt(); // reads user's input
                         break;
                     } else {
                         System.out.println("Invalid input. Please enter a correct number.");
                     }
                 }
-                client.numberList.add(userInput);
+                client.numberList.add(num_input);
             }
             oos.writeObject(client);//---output
-            System.out.println(input.readLine()); // reads server's ack and prints it
+            oos.flush();
+            //oos.close();
+            //System.out.println(input.readLine()); //--- reads server's ack and prints it (sending back to you now)
+            Server server = (Server) ois.readObject();//---receive
+            int[] resultArray = server.resultArray;
+            System.out.println("The result is:");
+            for (int num:resultArray) {
+                System.out.print(num + " ");
+            }
             System.out.println("-----------End of communication-----------");
             System.out.println("\nCommunication with server " + hostName + " was successful! Now closing...");
         } catch (UnknownHostException e) {
@@ -74,6 +86,8 @@ public class Client implements Serializable {
             System.err.println("Couldn't get I/O for the connection to " + hostName);
             e.printStackTrace();
             System.exit(1);
+        } catch (ClassNotFoundException e) {
+            e.printStackTrace();
         }
 
     }
