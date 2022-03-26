@@ -67,7 +67,7 @@ public class Client implements Serializable {
             oos.writeObject(messageSender2);//---output
 
             MessageSender messageSender3 = (MessageSender) ois.readObject();
-            System.out.println(messageSender3.message);
+            System.out.println("\n" + messageSender3.message);
             System.out.println("The result is:");
             for (int num:messageSender3.arr) {
                 System.out.print(num + " ");

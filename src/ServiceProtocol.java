@@ -24,10 +24,10 @@ public class ServiceProtocol {
     }
 
     public void processNumber(List<Integer> input) {
-        int headIndex = (threadCount-1) * ServerThread.getAmount_in_each_thread();
+        int headIndex = (threadCount - 1) * ServerThread.getAmount_in_each_thread();
         for (int i = 0; i < input.size(); i++) {
             int num = (int) input.get(i);
-            int result = num ^ 2;
+            int result = num * num;
             resultArray[i + headIndex] = result;
         }
     }

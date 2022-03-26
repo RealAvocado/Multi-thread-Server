@@ -24,7 +24,7 @@ public class Server implements Serializable {
         CountDownLatch downLatch = new CountDownLatch(5);
         while(true) {
             try (ServerSocket myServerSocket = new ServerSocket(portNumber); Socket clientSocket = myServerSocket.accept(); ObjectOutputStream oos = new ObjectOutputStream(clientSocket.getOutputStream()); ObjectInputStream ois = new ObjectInputStream(clientSocket.getInputStream())) {
-                System.out.println("Connection established with a new client with IP address: " + clientSocket.getInetAddress() + "\n");
+                System.out.println("\n\nConnection established with a new client with IP address: " + clientSocket.getInetAddress());
                 String output = "Server says: Hello Client \" + \". This is server \"" + myServerSocket.getInetAddress() + "\" providing the square operation service. Now I'm ready to receive your numbers.";
                 MessageSender messageSender1 = new MessageSender(output, null, null);
                 oos.writeObject(messageSender1);
@@ -49,7 +49,8 @@ public class Server implements Serializable {
                         numList = messageSender2.list.subList(4, messageSender2.list.size());
                     }
                     //construct a new thread to deal with client request
-                    new ServerThread(numList, downLatch).start();
+                    int thread_id = i+1;
+                    new ServerThread(numList, downLatch, thread_id).start();
                 }
 
                 downLatch.await();
