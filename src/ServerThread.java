@@ -4,11 +4,10 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.concurrent.CountDownLatch;
 
-public class ServerThread extends Thread {
+public class ServerThread implements Runnable {
     private List<Integer> numList = new ArrayList<>();//numbers allocated to this thread
     private CountDownLatch downLatch;
     private int threadID = 0;
-    private static int threadCount = 0;
     private static int amount_in_each_thread; //amount in each thread of first k-1 threads
 
     public ServerThread(List numList, CountDownLatch downLatch, int threadID) {
@@ -26,7 +25,6 @@ public class ServerThread extends Thread {
     }
 
     public void run() {
-        threadCount++;
         ServiceProtocol svp = new ServiceProtocol(threadID);
         svp.processNumber(numList);
         this.downLatch.countDown();

@@ -21,15 +21,22 @@ public class Server implements Serializable {
             portNumber = Integer.parseInt(args[0]);
         }
 
-        CountDownLatch downLatch = new CountDownLatch(5);
         while(true) {
-            try (ServerSocket myServerSocket = new ServerSocket(portNumber); Socket clientSocket = myServerSocket.accept(); ObjectOutputStream oos = new ObjectOutputStream(clientSocket.getOutputStream()); ObjectInputStream ois = new ObjectInputStream(clientSocket.getInputStream())) {
+            try (ServerSocket myServerSocket = new ServerSocket(portNumber);
+                 Socket clientSocket = myServerSocket.accept();
+                 ObjectOutputStream oos = new ObjectOutputStream(clientSocket.getOutputStream());
+                 ObjectInputStream ois = new ObjectInputStream(clientSocket.getInputStream())
+            ) {
                 System.out.println("\n\nConnection established with a new client with IP address: " + clientSocket.getInetAddress());
+
+                //-----------send the first message to client-------------
                 String output = "Server says: Hello Client \" + \". This is server \"" + myServerSocket.getInetAddress() + "\" providing the square operation service. Now I'm ready to receive your numbers.";
                 MessageSender messageSender1 = new MessageSender(output, null, null);
                 oos.writeObject(messageSender1);
 
+                //-----------receive client's message and numbers for service-------------
                 MessageSender messageSender2 = (MessageSender) ois.readObject();//---receive
+
                 System.out.println(messageSender2.message);
                 for (int i = 0; i < messageSender2.list.size(); i++) {
                     System.out.print(messageSender2.list.get(i) + " ");
@@ -41,6 +48,9 @@ public class Server implements Serializable {
                 ServerThread.setAmount_in_each_thread(1);
                 ServiceProtocol.setResultArraySize(total_amount);
 
+                //lock used to arrange main thread schedule, main thread would only continue after all sub-threads finished their calculation
+                CountDownLatch downLatch = new CountDownLatch(5);
+
                 for (int i = 0; i < threadCount; i++) {
                     List<Integer> numList;
                     if (i != 4) {
@@ -50,14 +60,25 @@ public class Server implements Serializable {
                     }
                     //construct a new thread to deal with client request
                     int thread_id = i+1;
-                    new ServerThread(numList, downLatch, thread_id).start();
+                    ServerThread serverThread = new ServerThread(numList, downLatch, thread_id);
+                    new Thread(serverThread).start();
                 }
 
+                //wait until all threads finished
                 downLatch.await();
+
+                //-----------send results back to the client-------------
                 MessageSender messageSender3 = new MessageSender("Server: Finished. Here's your result:", ServiceProtocol.getResultArray(), null);
                 oos.writeObject(messageSender3);
-            } catch (IOException | ClassNotFoundException | InterruptedException e) {
-                System.out.println("Exception caught when trying to listen on port " + portNumber + " or listening for a connection, or class not found or interrupted exception.");
+
+            } catch (IOException e) {
+                System.out.println("Exception caught when trying to listen on port " + portNumber + " or listening for a connection");
+                System.out.println(e.getMessage());
+            } catch (ClassNotFoundException e) {
+                System.out.println("Exception caught when class not found.");
+                System.out.println(e.getMessage());
+            } catch (InterruptedException e) {
+                System.out.println("Exception caught when interrupted exception.");
                 System.out.println(e.getMessage());
             }
         }

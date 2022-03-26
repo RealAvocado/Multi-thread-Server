@@ -17,12 +17,13 @@ public class Client implements Serializable {
         int portNumber = Integer.parseInt(args[1]);
 
         try (Socket myClientSocket = new Socket(hostName, portNumber);
-             ObjectOutputStream oos = new ObjectOutputStream(myClientSocket.getOutputStream()); //used to transmit arraylist
-             ObjectInputStream ois = new ObjectInputStream(myClientSocket.getInputStream())
+             ObjectOutputStream oos = new ObjectOutputStream(myClientSocket.getOutputStream()); //used to transmit arraylist and messages to server
+             ObjectInputStream ois = new ObjectInputStream(myClientSocket.getInputStream()) //used to receive result array and messages from server
              )
         {
-            //System.out.println(input.readLine()); //--- reads the first message from the server and prints it (hello)
+            //------- reads the first message from the server and prints it (hello)-----------
             MessageSender messageSender1 = (MessageSender) ois.readObject();
+
             System.out.println(messageSender1.message);
             System.out.println();
 
@@ -63,15 +64,19 @@ public class Client implements Serializable {
                 }
                 Client.numberList.add(num_input);
             }
+            //-----------send numbers to server-------------
             MessageSender messageSender2 = new MessageSender("Client: Numbers have reached, waiting to be calculated:", null, Client.numberList);
             oos.writeObject(messageSender2);//---output
 
+            //-----------receive results from server-------------
             MessageSender messageSender3 = (MessageSender) ois.readObject();
+
             System.out.println("\n" + messageSender3.message);
             System.out.println("The result is:");
             for (int num:messageSender3.arr) {
                 System.out.print(num + " ");
             }
+
             System.out.println("\n-----------End of communication-----------");
             System.out.println("\nCommunication with server " + hostName + " was successful! Now closing...");
         } catch (UnknownHostException e) {
