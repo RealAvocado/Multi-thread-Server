@@ -4,7 +4,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Scanner;
 
-public class Client implements Serializable {
+public class Client {
     public static List<Integer> numberList = new ArrayList<>();
 
     public static void main(String[] args) throws IOException {
@@ -24,7 +24,7 @@ public class Client implements Serializable {
             //------- reads the first message from the server and prints it (hello)-----------
             MessageSender messageSender1 = (MessageSender) ois.readObject();
 
-            System.out.println(messageSender1.message);
+            System.out.println(messageSender1.getMessage());
             System.out.println();
 
             System.out.println("Now you can send the integer numbers you want to operate to the server.\nHow many numbers in total? Please enter the amount.");
@@ -71,9 +71,9 @@ public class Client implements Serializable {
             //-----------receive results from server-------------
             MessageSender messageSender3 = (MessageSender) ois.readObject();
 
-            System.out.println("\n" + messageSender3.message);
+            System.out.println("\n" + messageSender3.getMessage());
             System.out.println("The result is:");
-            for (int num:messageSender3.arr) {
+            for (int num:messageSender3.getArr()) {
                 System.out.print(num + " ");
             }
 

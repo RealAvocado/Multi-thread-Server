@@ -6,7 +6,7 @@ import java.util.concurrent.CountDownLatch;
 /**
  * "k-1 threads for first k-1 numbers" version
  */
-public class Server implements Serializable {
+public class Server {
     public static int threadCount = 5;
 
     public static void main(String[] args) throws IOException {
@@ -37,31 +37,48 @@ public class Server implements Serializable {
                 //-----------receive client's message and numbers for service-------------
                 MessageSender messageSender2 = (MessageSender) ois.readObject();//---receive
 
-                System.out.println(messageSender2.message);
-                for (int i = 0; i < messageSender2.list.size(); i++) {
-                    System.out.print(messageSender2.list.get(i) + " ");
+                System.out.println(messageSender2.getMessage());
+                for (int i = 0; i < messageSender2.getList().size(); i++) {
+                    System.out.print(messageSender2.getList().get(i) + " ");
                 }
 
-                int total_amount = messageSender2.list.size();
+                int total_amount = messageSender2.getList().size();
                 /*int amount_in_each_thread = (int) Math.floor(total_amount/threadCount);
                 ServerThread.setAmount_in_each_thread(amount_in_each_thread);*/
                 ServerThread.setAmount_in_each_thread(1);
                 ServiceProtocol.setResultArraySize(total_amount);
 
                 //lock used to arrange main thread schedule, main thread would only continue after all sub-threads finished their calculation
-                CountDownLatch downLatch = new CountDownLatch(5);
+                CountDownLatch downLatch;
+                if (total_amount>=5) {
+                    downLatch = new CountDownLatch(5);
+                }else {
+                    downLatch = new CountDownLatch(total_amount);
+                }
 
-                for (int i = 0; i < threadCount; i++) {
-                    List<Integer> numList;
-                    if (i != 4) {
-                        numList = messageSender2.list.subList(i, i + 1);
-                    } else {
-                        numList = messageSender2.list.subList(4, messageSender2.list.size());
+                //start concurrent calculation in multi-threads
+                if (total_amount>=5) { //number amount larger than thread amount
+                    for (int i = 0; i < threadCount; i++) {
+                        List<Integer> numList;
+                        if (i != 4) {
+                            numList = messageSender2.getList().subList(i, i + 1);
+                        } else {
+                            numList = messageSender2.getList().subList(4, messageSender2.getList().size());
+                        }
+                        //construct a new thread to deal with client request
+                        int thread_id = i + 1; String id = Integer.toString(thread_id); String thread_name = "thread " + id;
+                        ServerThread serverThread = new ServerThread(numList, downLatch, thread_id);
+                        new Thread(serverThread, thread_name).start();
                     }
-                    //construct a new thread to deal with client request
-                    int thread_id = i+1;
-                    ServerThread serverThread = new ServerThread(numList, downLatch, thread_id);
-                    new Thread(serverThread).start();
+                }else{ //number amount less than thread amount
+                    for (int i = 0; i < total_amount; i++) {
+                        List<Integer> numList;
+                        numList = messageSender2.getList().subList(i, i + 1);
+                        //construct a new thread to deal with client request
+                        int thread_id = i + 1; String id = Integer.toString(thread_id); String thread_name = "thread " + id;
+                        ServerThread serverThread = new ServerThread(numList, downLatch, thread_id);
+                        new Thread(serverThread, thread_name).start();
+                    }
                 }
 
                 //wait until all threads finished
