@@ -4,12 +4,12 @@ import java.util.List;
 
 public class MessageSender implements Serializable {
     private String message;
-    private int[] arr; //from server
+    private double[] arr; //result from server
     private List<Integer> list; //from client
     private int client_choice; //from client
     private float execution_time; //from server
 
-    public MessageSender(String message, int[] arr, List<Integer> list, int client_choice, float execution_time) {
+    public MessageSender(String message, double[] arr, List<Integer> list, int client_choice, float execution_time) {
         this.message = message;
         this.arr = arr;
         this.list = list;
@@ -25,7 +25,7 @@ public class MessageSender implements Serializable {
     }
 
     //server message constructor
-    public MessageSender(String message, int[] arr, float execution_time){
+    public MessageSender(String message, double[] arr, float execution_time){
         this.message = message;
         this.arr = arr;
         this.execution_time = execution_time;
@@ -39,11 +39,11 @@ public class MessageSender implements Serializable {
         this.message = message;
     }
 
-    public int[] getArr() {
+    public double[] getArr() {
         return arr;
     }
 
-    public void setArr(int[] arr) {
+    public void setArr(double[] arr) {
         this.arr = arr;
     }
 

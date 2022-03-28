@@ -3,17 +3,14 @@ import java.net.*;
 import java.util.List;
 import java.util.concurrent.CountDownLatch;
 
-/**
- * "k-1 threads for first k-1 numbers" version
- */
-public class Server {
+public class Server_UniformDivision {
     public static int threadCount = 5;
 
     public static void main(String[] args) throws IOException {
         int portNumber;
         if (args.length < 1) {
             System.out.println("Warning: You have provided no arguments\nTrying to connect to the default port 8000...");
-            portNumber = 4444;
+            portNumber = 8000;
         } else if (args.length == 1) {
             portNumber = Integer.parseInt(args[0]);
         } else {
@@ -43,8 +40,9 @@ public class Server {
 
                 //allocate amount in each thread
                 int total_amount = messageSender2.getList().size();
-                ServerThread.setAmount_in_each_thread(1);
                 ServiceProtocol.setResultArraySize(total_amount);
+                int amount_in_each_thread = (int) Math.floor(total_amount/threadCount); //uniformly divide
+                ServerThread.setAmount_in_each_thread(amount_in_each_thread);
 
                 //lock used to arrange main thread schedule, main thread would only continue after all sub-threads finished their calculation
                 CountDownLatch downLatch;

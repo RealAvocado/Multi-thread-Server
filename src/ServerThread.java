@@ -1,5 +1,3 @@
-import java.net.*;
-import java.io.*;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.concurrent.CountDownLatch;
@@ -26,9 +24,25 @@ public class ServerThread implements Runnable {
         ServerThread.amount_in_each_thread = amount_in_each_thread;
     }
 
+    public void getCurrentIndex(){
+
+    }
+
     public void run() {
         ServiceProtocol svp = new ServiceProtocol(threadID);
-        svp.processNumberSquare(numList);
+        switch (client_choice){
+            case 1:
+                svp.processNumberSquare(numList);
+                break;
+            case 2:
+                svp.processNumberLog(numList);
+                break;
+            case 3:
+                svp.processNumberRoot(numList);
+                break;
+            default:
+                break;
+        }
         this.downLatch.countDown();
     }
 }

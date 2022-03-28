@@ -27,9 +27,12 @@ public class Client {
             System.out.println(messageSender1.getMessage());
             System.out.println();
 
-            System.out.println("Now you can send the integer numbers you want to operate to the server.\nHow many numbers in total? Please enter the amount.");
+            System.out.println("Hint: now you can send the natural numbers you want to operate to the server.\nHow many numbers in total? Please enter the amount.");
+
             int num_amount;
             int num_input;
+            int client_choice;
+
             while(true) {
                 Scanner scanner = new Scanner(System.in);
                 if (scanner.hasNextInt()) {
@@ -43,6 +46,7 @@ public class Client {
                     System.out.println("Invalid input. Please enter a correct number.");
                 }
             }
+
             for (int i = 0; i < num_amount; i++) {
                 switch (i){
                     case 0:
@@ -62,22 +66,42 @@ public class Client {
                     Scanner scanner = new Scanner(System.in);
                     if (scanner.hasNextInt()) {
                         num_input = scanner.nextInt(); // reads user's input
-                        break;
+                        if (num_input > 0) {
+                            break;
+                        } else {
+                            System.out.println("Invalid input. Please enter a natural number.");
+                        }
                     } else {
                         System.out.println("Invalid input. Please enter a correct number.");
                     }
                 }
                 Client.numberList.add(num_input);
             }
+
+            System.out.println("Now please select a type of operation service (enter the corresponding choice number provided by the server at the beginning)");
+            while(true) {
+                Scanner scanner = new Scanner(System.in);
+                if (scanner.hasNextInt()) {
+                    client_choice = scanner.nextInt(); // reads user's input
+                    if (client_choice > 0 && client_choice < 4) {
+                        break;
+                    } else {
+                        System.out.println("Invalid input. Please enter a correct choice.");
+                    }
+                } else {
+                    System.out.println("Invalid input. Please enter a correct choice.");
+                }
+            }
+
             //-----------send numbers to server-------------
-            MessageSender messageSender2 = new MessageSender("Client: Numbers have reached, waiting to be calculated:", Client.numberList,0);
+            MessageSender messageSender2 = new MessageSender("Client: Numbers have reached, waiting to be calculated:", Client.numberList,client_choice);
             oos.writeObject(messageSender2);//---output
 
             //-----------receive results from server-------------
             MessageSender messageSender3 = (MessageSender) ois.readObject();
             System.out.println("\n" + messageSender3.getMessage());
             System.out.println("The result is: " + Arrays.toString(messageSender3.getArr()));
-            System.out.println("Execution time: " + messageSender3.getExecution_time());
+            System.out.println("Execution time: " + messageSender3.getExecution_time() + " seconds");
 
             System.out.println("\n-----------End of communication-----------");
             System.out.println("\nCommunication with server " + hostName + " was successful! Now closing...");
