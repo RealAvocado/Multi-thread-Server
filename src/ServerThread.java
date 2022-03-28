@@ -7,13 +7,15 @@ public class ServerThread implements Runnable {
     private CountDownLatch downLatch;
     private int threadID = 0;
     private int client_choice = 0;
+    private int result_insert_index = 0;
     private static int amount_in_each_thread; //amount in each thread of first k-1 threads
 
-    public ServerThread(List numList, CountDownLatch downLatch, int threadID, int client_choice) {
+    public ServerThread(List<Integer> numList, CountDownLatch downLatch, int threadID, int client_choice, int result_insert_index) {
         this.numList = numList;
         this.downLatch = downLatch;
         this.threadID = threadID;
         this.client_choice = client_choice;
+        this.result_insert_index = result_insert_index;
     }
 
     public static int getAmount_in_each_thread() {
@@ -24,21 +26,17 @@ public class ServerThread implements Runnable {
         ServerThread.amount_in_each_thread = amount_in_each_thread;
     }
 
-    public void getCurrentIndex(){
-
-    }
-
     public void run() {
-        ServiceProtocol svp = new ServiceProtocol(threadID);
-        switch (client_choice){
+        ServiceProtocol svp = new ServiceProtocol();
+        switch (client_choice) {
             case 1:
-                svp.processNumberSquare(numList);
+                svp.processNumberSquare(numList, result_insert_index);
                 break;
             case 2:
-                svp.processNumberLog(numList);
+                svp.processNumberLog(numList, result_insert_index);
                 break;
             case 3:
-                svp.processNumberRoot(numList);
+                svp.processNumberRoot(numList, result_insert_index);
                 break;
             default:
                 break;

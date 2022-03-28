@@ -9,14 +9,6 @@ public class MessageSender implements Serializable {
     private int client_choice; //from client
     private float execution_time; //from server
 
-    public MessageSender(String message, double[] arr, List<Integer> list, int client_choice, float execution_time) {
-        this.message = message;
-        this.arr = arr;
-        this.list = list;
-        this.client_choice = client_choice;
-        this.execution_time = execution_time;
-    }
-
     //client message constructor
     public MessageSender(String message, List<Integer> list, int client_choice){
         this.message = message;
@@ -28,6 +20,14 @@ public class MessageSender implements Serializable {
     public MessageSender(String message, double[] arr, float execution_time){
         this.message = message;
         this.arr = arr;
+        this.execution_time = execution_time;
+    }
+
+    public MessageSender(String message, double[] arr, List<Integer> list, int client_choice, float execution_time) {
+        this.message = message;
+        this.arr = arr;
+        this.list = list;
+        this.client_choice = client_choice;
         this.execution_time = execution_time;
     }
 
