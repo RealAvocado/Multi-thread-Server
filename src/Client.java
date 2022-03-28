@@ -103,8 +103,8 @@ public class Client {
             System.out.println("The result is: " + Arrays.toString(messageSender3.getArr()));
             System.out.println("Execution time: " + messageSender3.getExecution_time() + " seconds");
 
-            System.out.println("\n-----------End of communication-----------");
             System.out.println("\nCommunication with server " + hostName + " was successful! Now closing...");
+            System.out.println("\n-----------End of communication-----------");
         } catch (UnknownHostException e) {
             System.err.println("Don't know about host " + hostName);
             System.exit(1);
