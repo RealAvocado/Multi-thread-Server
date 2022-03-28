@@ -3,7 +3,6 @@ import java.util.List;
 
 public class ServiceProtocol {
     private static double[] resultArray;
-    private int threadCount;
 
     public static double[] getResultArray() {
         return resultArray;
