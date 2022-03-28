@@ -1,6 +1,7 @@
 import java.io.*;
 import java.net.*;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 import java.util.Scanner;
 
@@ -21,20 +22,23 @@ public class Client {
              ObjectInputStream ois = new ObjectInputStream(myClientSocket.getInputStream()) //used to receive result array and messages from server
              )
         {
-            //------- reads the first message from the server and prints it (hello)-----------
+            //------------ reads the first message from the server and prints it (hello) --------------
             MessageSender messageSender1 = (MessageSender) ois.readObject();
-
             System.out.println(messageSender1.getMessage());
             System.out.println();
 
             System.out.println("Now you can send the integer numbers you want to operate to the server.\nHow many numbers in total? Please enter the amount.");
-            Scanner scanner = new Scanner(System.in);
             int num_amount;
             int num_input;
             while(true) {
+                Scanner scanner = new Scanner(System.in);
                 if (scanner.hasNextInt()) {
                     num_amount = scanner.nextInt(); // reads user's input
-                    break;
+                    if (num_amount > 0) {
+                        break;
+                    } else {
+                        System.out.println("Invalid input. Please enter a positive number.");
+                    }
                 } else {
                     System.out.println("Invalid input. Please enter a correct number.");
                 }
@@ -55,6 +59,7 @@ public class Client {
                         break;
                 }
                 while(true) {
+                    Scanner scanner = new Scanner(System.in);
                     if (scanner.hasNextInt()) {
                         num_input = scanner.nextInt(); // reads user's input
                         break;
@@ -65,17 +70,14 @@ public class Client {
                 Client.numberList.add(num_input);
             }
             //-----------send numbers to server-------------
-            MessageSender messageSender2 = new MessageSender("Client: Numbers have reached, waiting to be calculated:", null, Client.numberList);
+            MessageSender messageSender2 = new MessageSender("Client: Numbers have reached, waiting to be calculated:", Client.numberList,0);
             oos.writeObject(messageSender2);//---output
 
             //-----------receive results from server-------------
             MessageSender messageSender3 = (MessageSender) ois.readObject();
-
             System.out.println("\n" + messageSender3.getMessage());
-            System.out.println("The result is:");
-            for (int num:messageSender3.getArr()) {
-                System.out.print(num + " ");
-            }
+            System.out.println("The result is: " + Arrays.toString(messageSender3.getArr()));
+            System.out.println("Execution time: " + messageSender3.getExecution_time());
 
             System.out.println("\n-----------End of communication-----------");
             System.out.println("\nCommunication with server " + hostName + " was successful! Now closing...");

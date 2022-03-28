@@ -27,20 +27,23 @@ public class Server {
                  ObjectOutputStream oos = new ObjectOutputStream(clientSocket.getOutputStream());
                  ObjectInputStream ois = new ObjectInputStream(clientSocket.getInputStream())
             ) {
+                //operation service chosen by client
+                int client_choice = 0;
+
                 System.out.println("\n\nConnection established with a new client with IP address: " + clientSocket.getInetAddress());
 
                 //-----------send the first message to client-------------
                 String output = "Server says: Hello Client \" + \". This is server \"" + myServerSocket.getInetAddress() + "\" providing the square operation service. Now I'm ready to receive your numbers.";
-                MessageSender messageSender1 = new MessageSender(output, null, null);
+                MessageSender messageSender1 = new MessageSender(output, (int[]) null,0);
                 oos.writeObject(messageSender1);
 
                 //-----------receive client's message and numbers for service-------------
                 MessageSender messageSender2 = (MessageSender) ois.readObject();//---receive
+                //server's start time
+                long start_time = System.currentTimeMillis();
+                System.out.println(messageSender2.getMessage()); //clients received from the client
+                System.out.println(messageSender2.getList()); //numbers received from the client
 
-                System.out.println(messageSender2.getMessage());
-                for (int i = 0; i < messageSender2.getList().size(); i++) {
-                    System.out.print(messageSender2.getList().get(i) + " ");
-                }
 
                 int total_amount = messageSender2.getList().size();
                 /*int amount_in_each_thread = (int) Math.floor(total_amount/threadCount);
@@ -50,24 +53,24 @@ public class Server {
 
                 //lock used to arrange main thread schedule, main thread would only continue after all sub-threads finished their calculation
                 CountDownLatch downLatch;
-                if (total_amount>=5) {
-                    downLatch = new CountDownLatch(5);
+                if (total_amount >= threadCount) {
+                    downLatch = new CountDownLatch(threadCount);
                 }else {
                     downLatch = new CountDownLatch(total_amount);
                 }
 
                 //start concurrent calculation in multi-threads
-                if (total_amount>=5) { //number amount larger than thread amount
+                if (total_amount>=threadCount) { //number amount larger than thread amount
                     for (int i = 0; i < threadCount; i++) {
                         List<Integer> numList;
-                        if (i != 4) {
+                        if (i != threadCount-1) {
                             numList = messageSender2.getList().subList(i, i + 1);
                         } else {
-                            numList = messageSender2.getList().subList(4, messageSender2.getList().size());
+                            numList = messageSender2.getList().subList(threadCount-1, messageSender2.getList().size());
                         }
                         //construct a new thread to deal with client request
                         int thread_id = i + 1; String id = Integer.toString(thread_id); String thread_name = "thread " + id;
-                        ServerThread serverThread = new ServerThread(numList, downLatch, thread_id);
+                        ServerThread serverThread = new ServerThread(numList, downLatch, thread_id, client_choice);
                         new Thread(serverThread, thread_name).start();
                     }
                 }else{ //number amount less than thread amount
@@ -76,16 +79,18 @@ public class Server {
                         numList = messageSender2.getList().subList(i, i + 1);
                         //construct a new thread to deal with client request
                         int thread_id = i + 1; String id = Integer.toString(thread_id); String thread_name = "thread " + id;
-                        ServerThread serverThread = new ServerThread(numList, downLatch, thread_id);
+                        ServerThread serverThread = new ServerThread(numList, downLatch, thread_id, client_choice);
                         new Thread(serverThread, thread_name).start();
                     }
                 }
 
                 //wait until all threads finished
                 downLatch.await();
-
+                //calculate server execution time
+                long end_time = System.currentTimeMillis();
+                float execution_time = (float)(end_time-start_time)/1000;
                 //-----------send results back to the client-------------
-                MessageSender messageSender3 = new MessageSender("Server: Finished. Here's your result:", ServiceProtocol.getResultArray(), null);
+                MessageSender messageSender3 = new MessageSender("Server: Finished. Here's your result:", ServiceProtocol.getResultArray(), execution_time);
                 oos.writeObject(messageSender3);
 
             } catch (IOException e) {

@@ -23,7 +23,7 @@ public class ServiceProtocol {
         ServiceProtocol.resultArray = arr;
     }
 
-    public void processNumber(List<Integer> input) {
+    public void processNumberSquare(List<Integer> input) {
         int headIndex = (threadCount - 1) * ServerThread.getAmount_in_each_thread();
         for (int i = 0; i < input.size(); i++) {
             int num = (int) input.get(i);

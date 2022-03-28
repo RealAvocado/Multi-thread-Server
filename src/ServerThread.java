@@ -8,12 +8,14 @@ public class ServerThread implements Runnable {
     private List<Integer> numList = new ArrayList<>();//numbers allocated to this thread
     private CountDownLatch downLatch;
     private int threadID = 0;
+    private int client_choice = 0;
     private static int amount_in_each_thread; //amount in each thread of first k-1 threads
 
-    public ServerThread(List numList, CountDownLatch downLatch, int threadID) {
+    public ServerThread(List numList, CountDownLatch downLatch, int threadID, int client_choice) {
         this.numList = numList;
         this.downLatch = downLatch;
         this.threadID = threadID;
+        this.client_choice = client_choice;
     }
 
     public static int getAmount_in_each_thread() {
@@ -26,7 +28,7 @@ public class ServerThread implements Runnable {
 
     public void run() {
         ServiceProtocol svp = new ServiceProtocol(threadID);
-        svp.processNumber(numList);
+        svp.processNumberSquare(numList);
         this.downLatch.countDown();
     }
 }
