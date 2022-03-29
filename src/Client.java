@@ -78,7 +78,7 @@ public class Client {
                 Client.numberList.add(num_input);
             }
 
-            System.out.println("Now please select a type of operation service (enter the corresponding choice number provided by the server at the beginning)");
+            System.out.println("\nNow please select a type of operation service (enter the corresponding choice number provided by the server at the beginning)");
             while(true) {
                 Scanner scanner = new Scanner(System.in);
                 if (scanner.hasNextInt()) {
@@ -97,9 +97,12 @@ public class Client {
             MessageSender messageSender2 = new MessageSender("Client: Numbers have reached, waiting to be calculated:", Client.numberList,client_choice);
             oos.writeObject(messageSender2);//---output
 
+            System.out.println("\n\nLoading the processed result from server......");
+
             //-----------receive results from server-------------
             MessageSender messageSender3 = (MessageSender) ois.readObject();
             System.out.println("\n" + messageSender3.getMessage());
+            System.out.println("Your numbers are " + Client.numberList);
             System.out.println("The result is: " + Arrays.toString(messageSender3.getArr()));
             System.out.println("Execution time: " + messageSender3.getExecution_time() + " seconds");
 

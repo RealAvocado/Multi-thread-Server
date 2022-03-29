@@ -27,6 +27,7 @@ public class ServerThread implements Runnable {
     }
 
     public void run() {
+        System.out.println(Thread.currentThread().getName() + " is processing " + numList + "...");
         ServiceProtocol svp = new ServiceProtocol();
         switch (client_choice) {
             case 1:

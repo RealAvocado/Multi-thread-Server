@@ -3,6 +3,9 @@ import java.net.*;
 import java.util.List;
 import java.util.concurrent.CountDownLatch;
 
+/**
+ * "uniformly dividing sequence" version
+ */
 public class Server_UniformDivision {
     public static int threadCount = 5;
 
@@ -30,7 +33,7 @@ public class Server_UniformDivision {
                 System.out.println("\n-----------a new client communication-----------");
                 System.out.println("\nConnection established with a new client with IP address: " + clientSocket.getInetAddress());
                 //-----------send the first message to client-------------
-                String output = "Server: Hello Client \" + \". This is server \"" + myServerSocket.getInetAddress() + "\" providing the number operation service. \nThe available operations are: \n1.Square operation\n2.Logarithm operation (10 being base number)\n3.Root operation\n\nServer: Now I'm ready to receive your numbers.";
+                String output = "Server: Hello Client \" + \". This is server \"" + myServerSocket.getInetAddress() + "\" providing the number operation service. \n\nThe available operations are: \n1.Square operation\n2.Logarithm operation (10 being base number)\n3.Root operation\n\nServer: Now I'm ready to receive your numbers.";
                 MessageSender messageSender1 = new MessageSender(output, (double[]) null,0);
                 oos.writeObject(messageSender1);
 
@@ -58,7 +61,7 @@ public class Server_UniformDivision {
 
                 //start concurrent calculation in multi-threads
                 if (total_amount >= threadCount) { //number amount larger than thread amount
-                    int result_insert_index = 0; //index of inserting the result in the result array
+                    int result_insert_index = 0; //index of inserting the result in the result array for each thread
                     for (int i = 0; i < threadCount; i++) {
                         List<Integer> numList; //numbers allocated to each thread
                         if (i < overflow_thread_amount) {
@@ -70,7 +73,6 @@ public class Server_UniformDivision {
                         int thread_id = i + 1; String id = Integer.toString(thread_id); String thread_name = "thread " + id;
                         ServerThread serverThread = new ServerThread(numList, downLatch, thread_id, client_choice, result_insert_index);
                         new Thread(serverThread, thread_name).start();
-                        System.out.println(thread_name + " is processing :" + numList + "...");
                         result_insert_index = result_insert_index + numList.size();//update the insert index for the next thread
                     }
                 }else{ //number amount less than thread amount
@@ -81,7 +83,6 @@ public class Server_UniformDivision {
                         int thread_id = i + 1; String id = Integer.toString(thread_id); String thread_name = "thread " + id;
                         ServerThread serverThread = new ServerThread(numList, downLatch, thread_id, client_choice, thread_id-1);
                         new Thread(serverThread, thread_name).start();
-                        System.out.println(thread_name + " is processing :" + numList + "...");
                     }
                 }
 
