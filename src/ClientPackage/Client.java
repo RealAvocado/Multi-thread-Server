@@ -102,11 +102,17 @@ public class Client {
             oos.writeObject(messageSender2);//---output
 
             System.out.println("\nYour numbers are " + Client.numberList);
-            System.out.println("\n\n-----------------------------------------------------\nLoading the processed result from server......\n");
-            try {
-                Thread.sleep(2000);
-            } catch (InterruptedException e) {
-                e.printStackTrace();
+            System.out.print("\n----------------------------------------\nLoading the processed result from server");
+            for (int i = 0; i < 6; i++) {
+                try {
+                    Thread.sleep(300);
+                } catch (InterruptedException e) {
+                    e.printStackTrace();
+                }
+                System.out.print(".");
+                if (i == 5){
+                    System.out.println("\n");
+                }
             }
 
             //-----------receive results from server-------------
