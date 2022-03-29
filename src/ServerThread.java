@@ -1,9 +1,8 @@
-import java.util.ArrayList;
 import java.util.List;
 import java.util.concurrent.CountDownLatch;
 
 public class ServerThread implements Runnable {
-    private List<Integer> numList = new ArrayList<>();//numbers allocated to this thread
+    private List<Integer> numList;//numbers allocated to this thread
     private CountDownLatch downLatch;
     private int threadID = 0;
     private int client_choice = 0;
