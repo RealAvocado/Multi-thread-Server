@@ -1,3 +1,7 @@
+package ServerPackage;
+
+import CommunicationPackage.ServiceProtocol;
+
 import java.util.List;
 import java.util.concurrent.CountDownLatch;
 
