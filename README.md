@@ -24,4 +24,4 @@
 ## 3.2 ClientPackage 
 ### Classes in this package are the client classes mentioned in 2.2.
 ## 3.3 CommunicationPackage
-### There are two classes in this package. MessageSender class is used to generate serializable objects that can be transmitted between the server and the client. ServiceProtocol class focuses on processing data from the client and preparing the results.
+### There are two classes in this package. MessageSender class is used to generate the serializable object that can be transmitted between the server and the client. ServiceProtocol class focuses on processing data from the client and preparing the results.
