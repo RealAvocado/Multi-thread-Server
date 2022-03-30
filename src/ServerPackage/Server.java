@@ -38,7 +38,7 @@ public class Server {
                 System.out.println("\n-----------a new client communication-----------");
                 System.out.println("\nConnection established with a new client with IP address: " + clientSocket.getInetAddress() + "\n");
                 //-----------send the first message to client-------------
-                String output = "Server: Hello Client. This is server \"" + myServerSocket.getInetAddress() + "\" providing the number operation service. \n\nThe available operations are: \n1.Square operation\n2.Logarithm operation (10 being base number)\n3.Root operation\n\nServer: Now I'm ready to receive your numbers.";
+                String output = "Server: Hello Client. This is server \"" + myServerSocket.getInetAddress() + "\" providing the number operation service. \n\nThe available operations are: \n1.Square operation\n2.Logarithm operation (10 being base number)\n3.Square root operation\n\nServer: Now I'm ready to receive your numbers.";
                 MessageSender messageSender1 = new MessageSender(output, (double[]) null,0);
                 oos.writeObject(messageSender1);
 
