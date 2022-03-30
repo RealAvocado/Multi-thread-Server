@@ -3,6 +3,9 @@ package CommunicationPackage;
 import java.io.Serializable;
 import java.util.List;
 
+/**
+ * Serializable objects used for transmission between server and client
+ */
 public class MessageSender implements Serializable {
     private String message;
     private double[] arr; //result from server

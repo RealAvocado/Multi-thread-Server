@@ -12,7 +12,7 @@ import java.util.concurrent.CountDownLatch;
  * "k-1 threads for first k-1 numbers" version
  */
 public class Server {
-    public static int threadCount = 5;
+    public final static int threadCount = 10;
 
     public static void main(String[] args) throws IOException {
         int portNumber;

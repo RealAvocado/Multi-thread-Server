@@ -7,7 +7,7 @@ import java.net.*;
 import java.util.*;
 
 /**
- * a test-version client: for data gathering
+ * A test-version client: for data gathering
  * generate large amount of numbers at one time
  */
 public class Client_Test_Only {
@@ -56,7 +56,7 @@ public class Client_Test_Only {
                 Client.numberList.add(num);
             }
 
-            System.out.println("\nNow please select a type of operation service (enter the corresponding choice number provided by the server at the beginning)");
+            System.out.println("\nNow please select a type of number operation service (enter the corresponding choice number provided by the server at the beginning)");
             while(true) {
                 Scanner scanner = new Scanner(System.in);
                 if (scanner.hasNextInt()) {

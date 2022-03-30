@@ -9,6 +9,9 @@ import java.util.Arrays;
 import java.util.List;
 import java.util.Scanner;
 
+/**
+ * The client program for users to use.
+ */
 public class Client {
     public static List<Integer> numberList = new ArrayList<>();
 
@@ -82,7 +85,7 @@ public class Client {
                 Client.numberList.add(num_input);
             }
 
-            System.out.println("\nNow please select a type of operation service (enter the corresponding choice number provided by the server at the beginning)");
+            System.out.println("\nNow please select a type of number operation service (enter the corresponding choice number provided by the server at the beginning)");
             while(true) {
                 Scanner scanner = new Scanner(System.in);
                 if (scanner.hasNextInt()) {

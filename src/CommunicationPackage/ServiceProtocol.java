@@ -3,6 +3,9 @@ package CommunicationPackage;
 import java.math.BigDecimal;
 import java.util.List;
 
+/**
+ * processing protocol of server
+ */
 public class ServiceProtocol {
     private static double[] resultArray;
 

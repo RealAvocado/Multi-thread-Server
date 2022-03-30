@@ -30,7 +30,11 @@ public class ServerThread implements Runnable {
     }
 
     public void run() {
-        System.out.println(Thread.currentThread().getName() + " is processing " + numList + "...");
+        if (numList.size()>20) {
+            System.out.println("\n" + Thread.currentThread().getName() + " is processing " + numList.size() + " numbers...");
+        }else{
+            System.out.println("\n" + Thread.currentThread().getName() + " is processing " + numList + "...");
+        }
         ServiceProtocol svp = new ServiceProtocol();
         switch (client_choice) {
             case 1:

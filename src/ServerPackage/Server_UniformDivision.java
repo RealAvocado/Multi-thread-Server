@@ -12,7 +12,7 @@ import java.util.concurrent.CountDownLatch;
  * "uniformly dividing sequence" version
  */
 public class Server_UniformDivision {
-    public static int threadCount = 5;
+    public final static int threadCount = 10;
 
     public static void main(String[] args) throws IOException {
         int portNumber;
