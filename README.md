@@ -1,4 +1,4 @@
-# Server-Client Number Operation Service Model
+# Server-Client Number Operation Service
 # 1. Set up
 ### 1.1 IDE version: Intellij IDEA 2021.2 (other proper types of IDE would also be OK)
 ### 1.2 SDK: JKD1.8.0_301 (or any other versions of JDK which can support this project)
