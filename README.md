@@ -17,3 +17,10 @@
 ### This client program is for users to use. Just pass the arguments, run the program and follow the instruction in the interface.
 ### 2.2.2 "Client_Test_Only" class
 ### This client program is only for data testing purpose. It's not a real client interface model because in this case large amount of numbers can be generated automatically without user's input, and it's meaningless for a single client to do that operation. However, this client program is good at exploring the server's performance.
+# 3. Content of the project
+## 3.1 ServerPackage
+### Classes in this package are the two server classes mentioned in 2.1.
+## 3.2 ClientPackage 
+### Classes in this package are the client classes mentioned in 2.2.
+## 3.3 CommunicationPackage
+### There are two classes in this package. MessageSender class is used to generate serializable objects that can be transmitted between the server and the client. ServiceProtocol class focuses on processing data from the client and preparing the results.
